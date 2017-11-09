@@ -80,15 +80,35 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)
 
-    def test_non_registeered_user_login(self):
-        """ Test for login of non-registered user """
+    def test_invalid_login(self):
+        """ Test for non-existant and invalid login """
         with self.client:
+            # login with no registered user
             response = login_user(self, 'test@gmail.com', 'test123')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'User does not exist.')
+            self.assertTrue(
+                data['message'] == 'The username and password combination do not match our records.')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 404)
+            # user registration
+            resp_register = register_user(self, 'test@gmail.com', 'test123')
+            data_register = json.loads(resp_register.data.decode())
+            self.assertTrue(data_register['status'] == 'success')
+            self.assertTrue(
+                data_register['message'] == 'Successfully registered.'
+            )
+            self.assertTrue(data_register['auth_token'])
+            self.assertTrue(resp_register.content_type == 'application/json')
+            self.assertEqual(resp_register.status_code, 201)
+            # invalid login
+            resp_invalid = login_user(self, 'test@gmail.com', 'test12')
+            data_invalid = json.loads(resp_invalid.data.decode())
+            self.assertTrue(data_invalid['status'] == 'fail')
+            self.assertTrue(
+                data_invalid['message'] == 'The username and password combination do not match our records.')
+            self.assertTrue(resp_invalid.content_type == 'application/json')
+            self.assertEqual(resp_invalid.status_code, 404)
             
     def test_user_status(self):
         """ Test for user status """

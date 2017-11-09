@@ -76,7 +76,7 @@ class LoginAPI(MethodView):
             else:
                 responseObject = {
                     'status': 'fail',
-                    'message': 'User does not exist.'
+                    'message': 'The username and password combination do not match our records.'
                 }
                 return make_response(jsonify(responseObject)), 404
         except Exception as e:

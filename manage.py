@@ -1,11 +1,10 @@
 # manage.py
 
-
 import os
 import unittest
 import coverage
 
-from flask_script import Manager
+from flask_script import Server, Manager
 from flask_migrate import Migrate, MigrateCommand
 
 COV = coverage.coverage(
@@ -24,10 +23,11 @@ from project.server import app, db, models
 
 migrate = Migrate(app, db)
 manager = Manager(app)
+server = Server(host="0.0.0.0", port=5000)
 
-# migrations
+# manager commands
 manager.add_command('db', MigrateCommand)
-
+manager.add_command('runserver', server)
 
 @manager.command
 def test():
