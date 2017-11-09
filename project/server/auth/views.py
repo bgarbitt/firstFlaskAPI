@@ -49,8 +49,80 @@ class RegisterAPI(MethodView):
             }
             return make_response(jsonify(responseObject)), 202
 
+class LoginAPI(MethodView):
+    """
+    User Login Resource
+    """
+
+    def post(self):
+        # get the post data
+        post_data = request.get_json()
+        try:
+            # fetch the user data
+            user = User.query.filter_by(
+                email=post_data.get('email')
+              ).first()
+            auth_token = user.encode_auth_token(user.id)
+            if auth_token:
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Successfully logged in.',
+                    'auth_token': auth_token.decode()
+                }
+                return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            print(e)
+            resonseObject = {
+                'status': 'fail',
+                'message': 'Try again'
+            }
+            return make_response(jsonify(responseObject)), 500
+
+class UserAPI(MethodView):
+    """
+    User Resource
+    """
+
+    def get(self):
+        # get the auth token
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
+        else:
+            auth_token = ''
+        if auth_token:
+            response = User.decode_auth_token(auth_token)
+            if not isinstance(response, str):
+                user = User.query.filter_by(id=response).first()
+                responseObject = {
+                    'status': 'success',
+                    'data': {
+                        'user_id': user.id,
+                        'email': user.email,
+                        'admin': user.admin,
+                        'registered_on': user.registered_on
+                    }
+                }
+                return make_response(jsonify(responseObject)), 200
+            responseObject = {
+                'status': 'fail',
+                'message': response
+            }
+            return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 401
+                        
+          
+
+        
 # define the API resources
 registration_view = RegisterAPI.as_view('register_api')
+login_view = LoginAPI.as_view('login_api')
+user_view = UserAPI.as_view('user_api')
 
 # add Rules for API Endpoints
 auth_blueprint.add_url_rule(
@@ -58,4 +130,15 @@ auth_blueprint.add_url_rule(
     view_func=registration_view,
     methods=['POST']
 )
-                   
+
+auth_blueprint.add_url_rule(
+    '/auth/login',
+    view_func=login_view,
+    methods=['POST']
+)
+
+auth_blueprint.add_url_rule(
+    '/auth/status',
+    view_func=user_view,
+    methods=['GET']
+)
