@@ -1,5 +1,3 @@
-# manage.py
-
 import os
 import unittest
 import coverage
@@ -9,9 +7,9 @@ from flask_script import Server, Manager
 from flask_migrate import Migrate, MigrateCommand
 
 COV = coverage.coverage(
-    branch=True,
-    include='project/*',
-    omit=[
+    branch = True,
+    include = 'project/*',
+    omit = [
         'project/tests/*',
         'project/server/config.py',
         'project/server/*/__init__.py'
