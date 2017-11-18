@@ -40,7 +40,7 @@ class User(db.Model):
                 payload,
                 app.config.get('SECRET_KEY'),
                 algorithm='HS256'
-                )
+            )
         except Exception as e:
             return e
 
@@ -51,7 +51,6 @@ class User(db.Model):
         :param auth_token:
         :return: integer|string
         """
-
         try:
             payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
             is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
@@ -59,7 +58,6 @@ class User(db.Model):
                 return 'Token blacklisted. Please log in again.'
             else:
                 return payload['sub']
-
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
@@ -69,7 +67,6 @@ class BlacklistToken(db.Model):
     """
     Token Model for storing JWT tokens
     """
-
     __tablename__ = 'blacklist_tokens'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -91,7 +88,6 @@ class BlacklistToken(db.Model):
             return True
         else:
             return False
-
                 
 class Branch(db.Model):
     """
@@ -101,8 +97,6 @@ class Branch(db.Model):
 
     branch = db.Column(db.String(30), primary_key=True)
     iLink = db.Column(db.String(255), nullable=True)
-
-    #__table_args__ = (db.ForeignKeyConstraint([branch],[Branch.branch]), {})
     
     def __init__(self, branch, iLink):
         self.branch = branch

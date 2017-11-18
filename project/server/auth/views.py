@@ -16,6 +16,7 @@ class RegisterAPI(MethodView):
     def post(self):
         # get post data
         post_data = request.get_json()
+        
         # check if user already exists
         user = User.query.filter_by(email=post_data.get('email')).first()
         if not user:
@@ -24,11 +25,12 @@ class RegisterAPI(MethodView):
                     email=post_data.get('email'),
                     password=post_data.get('password')
                 )
-
                 # insert the user
+                
                 db.session.add(user)
                 db.session.commit()
                 # generate the auth token
+                
                 auth_token = user.encode_auth_token(user.id)
                 responseObject = {
                     'status': 'success',
@@ -53,7 +55,6 @@ class LoginAPI(MethodView):
     """
     User Login Resource
     """
-
     def post(self):
         # get the post data
         post_data = request.get_json()
@@ -61,7 +62,8 @@ class LoginAPI(MethodView):
             # fetch the user data
             user = User.query.filter_by(
                 email=post_data.get('email')
-              ).first()
+            ).first()
+            
             if user and bcrypt.check_password_hash(
                     user.password, post_data.get('password')
             ):
@@ -70,7 +72,7 @@ class LoginAPI(MethodView):
                     responseObject = {
                         'status': 'success',
                         'message': 'Successfully logged in.',
-                    'auth_token': auth_token.decode()
+                        'auth_token': auth_token.decode()
                     }
                     return make_response(jsonify(responseObject)), 200
             else:
@@ -80,18 +82,17 @@ class LoginAPI(MethodView):
                 }
                 return make_response(jsonify(responseObject)), 404
         except Exception as e:
-            print(e)
-            resonseObject = {
+            responseObject = {
                 'status': 'fail',
                 'message': 'Try again'
             }
+            print(e)
             return make_response(jsonify(responseObject)), 500
 
 class UserAPI(MethodView):
     """
     User Resource
     """
-
     def get(self):
         # get the auth token
         auth_header = request.headers.get('Authorization')
@@ -131,12 +132,11 @@ class UserAPI(MethodView):
                 'message': 'Provide a valid auth token.'
             }
             return make_response(jsonify(responseObject)), 401
-                        
+
 class LogoutAPI(MethodView):
     """
     Logout Resource
     """
-
     def post(self):
         # get auth token
         auth_header = request.headers.get('Authorization')
@@ -176,7 +176,7 @@ class LogoutAPI(MethodView):
                 'message': 'Provide a valid auth token.'
             }
             return make_response(jsonify(responseObject)), 403
-            
+
 # define the API resources
 registration_view = RegisterAPI.as_view('register_api')
 login_view = LoginAPI.as_view('login_api')
