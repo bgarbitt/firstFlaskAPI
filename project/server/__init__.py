@@ -20,8 +20,12 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
 from project.server.auth.views import auth_blueprint
-from project.server.getInfo.views import info_blueprint
+from project.server.getInfo.Question import question_blueprint
+from project.server.getInfo.Zone import zone_blueprint
+from project.server.getInfo.Branch import branch_blueprint
 
 app.register_blueprint(auth_blueprint)
-app.register_blueprint(info_blueprint)
+app.register_blueprint(question_blueprint)
+app.register_blueprint(zone_blueprint)
+app.register_blueprint(branch_blueprint)
 
