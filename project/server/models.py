@@ -141,12 +141,11 @@ class Question(db.Model):
     Choices = db.Column(db.String(255), nullable=True)
     Solution = db.Column(db.String(255), nullable=True)
     zone = db.Column(db.String(30), nullable=True)
-    #zone = db.Column(db.String(30), db.ForeignKey('zone.zone'), nullable=False)
-    #branch = db.Column(db.String(30), db.ForeignKey(Branch.branch), nullable=False)
     branch = db.Column(db.String(30), nullable=True)
     qType = db.Column(db.String(255), nullable=True)
     iLink = db.Column(db.String(255), nullable=True)
     sLink = db.Column(db.String(255), nullable=True)
+    blanks = db.Column(db.String(255), nullable=True)
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     __table_args__ = (db.ForeignKeyConstraint([branch, zone],
@@ -154,7 +153,7 @@ class Question(db.Model):
                       {})
 
     def __init__(self, Prompt, Choices, Solution, zone, branch,
-                 qType, iLink, sLink):
+                 qType, iLink, sLink, blanks):
         self.Prompt = Prompt
         self.Choices = Choices
         self.Solution = Solution
@@ -163,4 +162,4 @@ class Question(db.Model):
         self.qType = qType
         self.iLink = iLink
         self.sLink = sLink
-
+        self.blanks = blanks

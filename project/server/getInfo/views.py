@@ -11,8 +11,8 @@ import collections
 info_blueprint = Blueprint('getInfo', __name__)
 
 @info_blueprint.route('/createQuestion/<prompt>/<choices>/<solution>/' + \
-                      '<zone>/<branch>/<qtype>/<ilink>/<slink>', methods = ['POST'])
-def createQuestion(prompt, choices, solution, zone, branch, qtype, ilink, slink):
+                      '<zone>/<branch>/<qtype>/<ilink>/<slink>/<blanks>', methods = ['POST'])
+def createQuestion(prompt, choices, solution, zone, branch, qtype, ilink, slink, blanks):
     try:
         question = Question(
             Prompt=prompt,
@@ -22,7 +22,8 @@ def createQuestion(prompt, choices, solution, zone, branch, qtype, ilink, slink)
             branch=branch,
             qType=qtype,
             iLink=ilink,
-            sLink=slink
+            sLink=slink,
+            blanks=blanks
         )
         db.session.add(question)
         db.session.commit()
@@ -45,7 +46,7 @@ def getQuestion(zone, branch):
         connection = db.engine.raw_connection()
         cur = connection.cursor()
 
-        stmt = "SELECT Prompt, Choices, Solution, zone, branch, qType, iLink, sLink \
+        stmt = "SELECT Prompt, Choices, Solution, zone, branch, qType, iLink, sLink, id, blanks \
         FROM questions \
         WHERE zone = %(zone)s AND branch = %(branch)s"
 
@@ -63,12 +64,13 @@ def getQuestion(zone, branch):
             d['qType'] = row[5]
             d['iLink'] = row[6]
             d['sLink'] = row[7]
+            d['id'] = row[8]
+            d['blanks'] = row[9]
             return_list.append(d)
             
-        data = json.dumps(return_list)
         responseObject = {
             'status' : 'success',
-            'data': data
+            'data': return_list
         }
         connection.close()
         return make_response(jsonify(responseObject)), 200
@@ -129,10 +131,9 @@ def getZones(branch):
             d['color'] = row[4]
             return_list.append(d)
 
-        data = json.dumps(return_list)
         responseObject = {
             'status' : 'success',
-            'data' : data
+            'data' : return_list
         }
         connection.close()
         return make_response(jsonify(responseObject)), 200
@@ -188,10 +189,9 @@ def getBranch():
             d['iLink'] = row[1]
             return_list.append(d)
 
-        data = json.dumps(return_list)
         responseObject = {
             'status' : 'success',
-            'data' : data
+            'data' : return_list
         }
         connection.close()
         return make_response(jsonify(responseObject)), 200

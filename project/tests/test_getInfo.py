@@ -33,13 +33,13 @@ class TestGetInfoBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             data=json.loads(get_response.data.decode())
-            query_output=ast.literal_eval(data['data'])[0]
-
+            return_query=data['data'][0]
+            
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['data'] is not None)
-            self.assertTrue(query_output is not None)
-            self.assertTrue(query_output['branch'] == 'Clareview')
-            self.assertTrue(query_output['iLink'] == '1245')
+            self.assertTrue(return_query is not None)
+            self.assertTrue(return_query['branch'] == 'Clareview')
+            self.assertTrue(return_query['iLink'] == '1245')
             self.assertTrue(get_response.content_type == 'application/json')
             self.assertEqual(get_response.status_code, 200)
 
@@ -76,7 +76,7 @@ class TestGetInfoBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             data = json.loads(create_response.data.decode())
-            
+
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Successfully created zone.')
             self.assertTrue(create_response.content_type == 'application/json')
@@ -86,19 +86,21 @@ class TestGetInfoBlueprint(BaseTestCase):
                 '/getZone/' + branch,
                 content_type='application/json'
             )
+
             data=json.loads(get_response.data.decode())
-            query_output=ast.literal_eval(data['data'])[0]
+            return_query=data['data'][0]
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['data'] is not None)
-            self.assertTrue(query_output is not None)
-            self.assertTrue(query_output['beaconID'] == '123456')
-            self.assertTrue(query_output['zone'] == 'Landscapes')
-            self.assertTrue(query_output['branch'] == 'Clareview')
-            self.assertTrue(query_output['area'] == 'Nonfiction')
-            self.assertTrue(query_output['color'] == 'Blue')
+            self.assertTrue(return_query is not None)
+            self.assertTrue(return_query['beaconID'] == '123456')
+            self.assertTrue(return_query['zone'] == 'Landscapes')
+            self.assertTrue(return_query['branch'] == 'Clareview')
+            self.assertTrue(return_query['area'] == 'Nonfiction')
+            self.assertTrue(return_query['color'] == 'Blue')
             self.assertTrue(get_response.content_type == 'application/json')
             self.assertEqual(get_response.status_code, 200)
-            
+
+
     def test_Question(self):
         with self.client:
             branch = 'Clareview'
@@ -143,9 +145,10 @@ class TestGetInfoBlueprint(BaseTestCase):
             solution = 'a'
             zone = 'Landscapes'
             branch = 'Clareview'
-            qtype = 'multChoice'
+            qtype = 'writInput'
             ilink = '1'
             slink = '1'
+            blanks = 'a__d'
             url = '/createQuestion/' + prompt + '/' \
                   + choices + '/' \
                   + solution + '/' \
@@ -153,7 +156,8 @@ class TestGetInfoBlueprint(BaseTestCase):
                   + branch + '/' \
                   + qtype + '/' \
                   + ilink + '/' \
-                  + slink
+                  + slink + '/' \
+                  + blanks
 
             create_response = self.client.post(
                 url,
@@ -172,19 +176,20 @@ class TestGetInfoBlueprint(BaseTestCase):
                 content_type='application/json'
             )
             data=json.loads(get_response.data.decode())
-            query_output=ast.literal_eval(data['data'])[0]
+            return_query=data['data'][0]
 
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['data'] is not None)
-            self.assertTrue(query_output is not None)
-            self.assertTrue(query_output['Prompt'] == 'question 1')
-            self.assertTrue(query_output['Choices'] == 'abcd')
-            self.assertTrue(query_output['Solution'] == 'a')
-            self.assertTrue(query_output['zone'] == 'Landscapes')
-            self.assertTrue(query_output['branch'] == 'Clareview')
-            self.assertTrue(query_output['qType'] == 'multChoice')
-            self.assertTrue(query_output['iLink'] == '1')
-            self.assertTrue(query_output['sLink'] == '1')
+            self.assertTrue(return_query is not None)
+            self.assertTrue(return_query['Prompt'] == 'question 1')
+            self.assertTrue(return_query['Choices'] == 'abcd')
+            self.assertTrue(return_query['Solution'] == 'a')
+            self.assertTrue(return_query['zone'] == 'Landscapes')
+            self.assertTrue(return_query['branch'] == 'Clareview')
+            self.assertTrue(return_query['qType'] == 'writInput')
+            self.assertTrue(return_query['iLink'] == '1')
+            self.assertTrue(return_query['sLink'] == '1')
+            self.assertTrue(return_query['blanks'] == 'a__d')
             self.assertTrue(get_response.content_type == 'application/json')
             self.assertEqual(get_response.status_code, 200)
 
