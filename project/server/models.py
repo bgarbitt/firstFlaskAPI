@@ -6,7 +6,9 @@ import jwt
 from project.server import app, db, bcrypt
 
 class User(db.Model):
-    """ User Model for storing user related details """
+    """ 
+    User Model for storing user related details
+    """
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -89,3 +91,76 @@ class BlacklistToken(db.Model):
             return True
         else:
             return False
+
+                
+class Branch(db.Model):
+    """
+    Branch Model
+    """
+    __tablename__ = 'branch'
+
+    branch = db.Column(db.String(30), primary_key=True)
+    iLink = db.Column(db.String(255), nullable=True)
+
+    #__table_args__ = (db.ForeignKeyConstraint([branch],[Branch.branch]), {})
+    
+    def __init__(self, branch, iLink):
+        self.branch = branch
+        self.iLink = iLink
+
+        
+class Zone(db.Model):
+    """
+    Zone Model for storing zones
+    """
+    __tablename__ = 'zone'
+    beaconID = db.Column(db.String(50), nullable=True)
+    zone = db.Column(db.String(30), primary_key=True)
+    branch = db.Column(db.String(30), primary_key=True)
+    area = db.Column(db.String(255), nullable=True)
+    color = db.Column(db.String(255), nullable=True)
+
+    __table_args__ = (db.ForeignKeyConstraint([branch],
+                                              [Branch.branch]),
+                      {})
+    
+    def __init__(self, beaconID, zone, branch, area, color):
+        self.beaconID = beaconID
+        self.zone = zone
+        self.branch = branch
+        self.area = area
+        self.color = color
+
+class Question(db.Model):
+    """
+    Question Model for storing questions
+    """
+    __tablename__ = 'questions'
+
+    Prompt = db.Column(db.String(255), nullable=True)
+    Choices = db.Column(db.String(255), nullable=True)
+    Solution = db.Column(db.String(255), nullable=True)
+    zone = db.Column(db.String(30), nullable=True)
+    #zone = db.Column(db.String(30), db.ForeignKey('zone.zone'), nullable=False)
+    #branch = db.Column(db.String(30), db.ForeignKey(Branch.branch), nullable=False)
+    branch = db.Column(db.String(30), nullable=True)
+    qType = db.Column(db.String(255), nullable=True)
+    iLink = db.Column(db.String(255), nullable=True)
+    sLink = db.Column(db.String(255), nullable=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    __table_args__ = (db.ForeignKeyConstraint([branch, zone],
+                                              [Zone.branch, Zone.zone]),
+                      {})
+
+    def __init__(self, Prompt, Choices, Solution, zone, branch,
+                 qType, iLink, sLink):
+        self.Prompt = Prompt
+        self.Choices = Choices
+        self.Solution = Solution
+        self.zone = zone
+        self.branch = branch
+        self.qType = qType
+        self.iLink = iLink
+        self.sLink = sLink
+
