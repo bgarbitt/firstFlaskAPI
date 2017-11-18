@@ -1,4 +1,4 @@
-# PROJECT20/server/models.py
+# project/server
 
 import datetime
 import jwt
@@ -91,7 +91,7 @@ class BlacklistToken(db.Model):
                 
 class Branch(db.Model):
     """
-    Branch Model
+    Branch Model for storing branches
     """
     __tablename__ = 'branch'
 

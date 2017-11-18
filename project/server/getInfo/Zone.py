@@ -20,6 +20,8 @@ def createZone(new_beaconID, new_zone, new_branch, new_area, new_color):
             area=new_area,
             color=new_color
         )
+
+        # Insert the zone
         db.session.add(zone)
         db.session.commit()
         responseObject = {
@@ -48,6 +50,8 @@ def getZones(branch):
         cur.execute(stmt, {'branch': branch})
         rows = cur.fetchall()
 
+        # Parse the output into a
+        # list of dictionaries
         return_list = []
         for row in rows:
             d = collections.OrderedDict()

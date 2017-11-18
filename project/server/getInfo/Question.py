@@ -24,8 +24,10 @@ def createQuestion(prompt, choices, solution, zone, branch, qtype, ilink, slink,
             sLink=slink,
             blanks=blanks
         )
+        # Insert the Question
         db.session.add(question)
         db.session.commit()
+        
         responseObject = {
             'status' : 'success',
             'message': 'Successfully created question.'
@@ -52,6 +54,8 @@ def getQuestion(zone, branch):
         cur.execute(stmt, {'zone': zone, 'branch': branch})
         rows = cur.fetchall()
 
+        # Parse the output into a
+        # list of dictionaries
         return_list = []
         for row in rows:
             d = collections.OrderedDict()

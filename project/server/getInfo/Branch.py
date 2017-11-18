@@ -13,10 +13,11 @@ branch_blueprint = Blueprint('branch', __name__)
 def createBranch(new_branch, new_iLink):
     try:
         branch = Branch(
-            branch=new_branch,
-            iLink=new_iLink
+            branch = new_branch,
+            iLink = new_iLink
         )
 
+        # Insert the branch
         db.session.add(branch)
         db.session.commit()
 
@@ -45,6 +46,8 @@ def getBranch():
         cur.execute(stmt)
         rows = cur.fetchall()
 
+        # Parse the output into a
+        # list of dictionaries
         return_list = []
         for row in rows:
             d = collections.OrderedDict()

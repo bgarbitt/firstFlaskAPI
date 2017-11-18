@@ -1,4 +1,4 @@
-# project/tests/test_user_model.py
+# project/tests
 
 import unittest
 
@@ -21,8 +21,8 @@ class TestUserModel(BaseTestCase):
 
     def test_decode_auth_token(self):
         user = User(
-            email='test@test.com',
-            password='test'
+            email = 'test@test.com',
+            password = 'test'
         )
         db.session.add(user)
         db.session.commit()
