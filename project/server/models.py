@@ -111,18 +111,18 @@ class Zone(db.Model):
     beaconID = db.Column(db.String(50), nullable=True)
     zone = db.Column(db.String(30), primary_key=True)
     branch = db.Column(db.String(30), primary_key=True)
-    area = db.Column(db.String(255), nullable=True)
+    category = db.Column(db.String(255), nullable=True)
     color = db.Column(db.String(255), nullable=True)
 
     __table_args__ = (db.ForeignKeyConstraint([branch],
                                               [Branch.branch]),
                       {})
     
-    def __init__(self, beaconID, zone, branch, area, color):
+    def __init__(self, beaconID, zone, branch, category, color):
         self.beaconID = beaconID
         self.zone = zone
         self.branch = branch
-        self.area = area
+        self.category = category
         self.color = color
 
 class Question(db.Model):
