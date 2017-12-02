@@ -1,8 +1,68 @@
 # firstFlaskAPI
 
-Cloned from https://realpython.com/blog/python/token-based-authentication-with-flask/ for authentication and setup. 
-This API's methods are meant for the following schema:
-==========================
+Cloned from https://realpython.com/blog/python/token-based-authentication-with-flask/ for authentication and setup.
+
+To learn how to build the server, consult the following:\
+https://github.com/realpython/flask-jwt-auth/blob/master/README.md 
+
+Summary here:
+------------
+Activate a virtualenv
+```sh
+$ source env/bin/activate
+```
+
+Be sure requirements are installed.
+
+### Set Environment Variables
+
+Update *project/server/config.py*, and then run:
+
+```sh
+$ export APP_SETTINGS="project.server.config.DevelopmentConfig"
+```
+
+or
+
+```sh
+$ export APP_SETTINGS="project.server.config.ProductionConfig"
+```
+
+Set a SECRET_KEY:
+
+```sh
+$ export SECRET_KEY="change_me"
+```
+
+### Run the Application
+
+```sh
+$ python manage.py runserver --threaded &
+```
+
+or
+
+```sh
+$ nohup python manage.py runserver --threaded &
+```
+To run server while being allowed to logout.
+
+### Testing
+
+Without coverage:
+
+```sh
+$ python manage.py test
+```
+
+With coverage:
+
+```sh
+$ python manage.py cov
+```
+
+Database Schema
+--------------
 
     CREATE TABLE `questions` (
       `Prompt` text,
