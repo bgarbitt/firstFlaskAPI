@@ -170,28 +170,11 @@ def getAllQuestions():
         return make_response(jsonify(responseObject)), 500
 
 
-"""/updateQuestion/1/
-What%20bird%20is%20this%3F/
-%20/
-Peregrine%20falcon/
-Childrens%20Area
-/Clareview
-/writInput
-/https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2F2%2F2d%2FPeregrine_Falcon_with_Kill.jpg
-/%20
-/Per_g__ne%20f__c_n HTTP/1.1"""
 @question_blueprint.route('/updateQuestion/<id>/<prompt>/<choices>/<solution>/' + \
                       '<zone>/<branch>/<qtype>/<path:ilink>/<slink>/<blanks>', methods = ['POST'])
 def updateQuestion(id, prompt, choices, solution, zone, branch, qtype, ilink, slink, blanks):
-    print("\n")
-    print(ilink)
-    print("\n")
-    print(slink)
-    print("\n")
     try:
         question = Question.query.get(id)
-        print(question.zone)
-        print(zone)
         question.Prompt   = prompt
         question.Choices  = choices
         question.Solution = solution
@@ -201,7 +184,6 @@ def updateQuestion(id, prompt, choices, solution, zone, branch, qtype, ilink, sl
         question.iLink    = ilink
         question.sLink    = slink
         question.blanks   = blanks
-        print(question.zone)
 
         db.session.commit()
         responseObject = {
