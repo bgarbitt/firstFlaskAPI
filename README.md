@@ -7,6 +7,10 @@ https://github.com/realpython/flask-jwt-auth/blob/master/README.md
 
 Summary here:
 ------------
+```sh
+$ python3.4 -m env
+```
+
 Activate a virtualenv
 ```sh
 $ source env/bin/activate
